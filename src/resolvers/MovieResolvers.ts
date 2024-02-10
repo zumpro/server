@@ -1,7 +1,7 @@
 import { EntityMetadata, FindManyOptions, FindOneOptions, ILike, Repository } from "typeorm";
 import { Movie } from "../entities/Movie";
 import { Arg, Int, Query, Resolver } from "type-graphql";
-import dataSource from "../database.config";
+import dataSource from "../database/database.config";
 // import { GraphQLString } from "graphql";
 import { Genre } from "../entities/Genre";
 

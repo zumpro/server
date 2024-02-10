@@ -1,0 +1,17 @@
+{
+    "name": "api",
+    "formation": {
+      "web": {
+        "command": "node dist/index.js",
+        "healthcheck": {
+          "command": "curl --fail http://api.anifid.ru/healthcheck || exit 1",
+          "interval": 10,
+          "timeout": 5,
+          "retries": 3,
+          "wait": 5
+        }
+      }
+    }
+  }
+  
+  
