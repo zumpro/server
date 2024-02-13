@@ -1,4 +1,4 @@
-import dataSource from './database.config';
+import {dataSource} from './database.config';
 
 /**
  * Инициализирует базу данных.
@@ -7,6 +7,7 @@ import dataSource from './database.config';
 export async function initializeDatabase(): Promise<void> {
     try {
         await dataSource.initialize();
+        await dataSource.runMigrations()
         console.log('Подключение к базе данных успешно!');
     } catch (error) {
         console.error('Ошибка при инициализации базы данных:', error);

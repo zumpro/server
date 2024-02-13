@@ -1,8 +1,10 @@
 {
-    "name": "api",
+    "name": "server",
+    "description": "Anifid API application",
     "formation": {
       "web": {
         "command": "node dist/index.js",
+        "quantity": 1,
         "healthcheck": {
           "command": "curl --fail http://api.anifid.ru/healthcheck || exit 1",
           "interval": 10,

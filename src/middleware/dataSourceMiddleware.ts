@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import dataSource from '../database/database.config';
+import {dataSource} from '../database/database.config';
 
 /**
  * Промежуточное ПО для доступа к источнику данных.
