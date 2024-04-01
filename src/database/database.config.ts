@@ -16,7 +16,7 @@ import { Genre } from '../entities/Genre';
     url: process.env.DATABASE_URL,
     entities: [Movie, Genre], // Укажите все ваши сущности здесь
     synchronize: true,// Автоматическое создание таблиц приложения в базе данных (в разработке это удобно, но не рекомендуется в продакшене)
-    logging: true, // Логгирование SQL-запросов (включено для отладки)
+    logging: false, // Логгирование SQL-запросов (включено для отладки)
     // migrations: [path.join(__dirname, "./migrations/*")],
 });
 

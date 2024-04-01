@@ -6,15 +6,15 @@ import expressApp from './server/expressApp';
 import { startApolloServer } from './server/apolloServer';
 import { initializeDatabase } from './database/databaseInitializer';
 import {dataSourceMiddleware} from './middleware/dataSourceMiddleware';
-// import moviesRouteHandler from './routes/moviesRouteHandler';
+
 
 config({
   allowEmptyValues: true,
 });
 // Инициализация базы данных
 initializeDatabase()
-  .then(() => {
-    console.log('Подключение к базе данных успешно!');
+.then(() => {
+
     
     // Добавление middleware для доступа к dataSource
     expressApp.use(dataSourceMiddleware);
@@ -29,8 +29,9 @@ initializeDatabase()
 
     // Запуск Apollo Server
     startApolloServer();
-  })
-  .catch((error) => {
-    console.error('Ошибка при инициализации базы данных:', error);
-    console.error('Что-то пошло не так. Пожалуйста, проверьте конфигурацию и настройки вашего приложения.');
-  });
+
+      })
+      .catch((error) => {
+        console.error('Ошибка при инициализации базы данных:', error);
+        console.error('Что-то пошло не так. Пожалуйста, проверьте конфигурацию и настройки вашего приложения.');
+      });
