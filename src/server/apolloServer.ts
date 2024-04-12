@@ -2,10 +2,15 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { MovieResolver } from '../resolvers/MovieResolvers';
 import http from 'http';
+import https from 'https';
+import fs from 'fs';
 import expressApp from './expressApp';
-import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
-import { Request } from 'express'; // Импортируем только тип Request из express
+import {  ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+import { Request } from 'express';
 import { DataSource } from 'typeorm';
+
+// Определяем режим работы приложения (разработка или продакшн)
+const isProduction = process.env.NODE_ENV === 'production';
 
 /**
  * Запускает Apollo Server.
@@ -18,17 +23,34 @@ export async function startApolloServer(): Promise<void> {
         validate: true,
     });
 
-    // Создаем HTTP-сервер с использованием Express приложения
-    const httpServer = http.createServer(expressApp);
+    // Создаем сервер
+    let server: http.Server | https.Server; // Явное указание типа данных для переменной server
+    if (isProduction) {
+            // Получаем пути к файлам сертификата и ключа из переменных окружения
+        const privateKeyPath = process.env.SSL_PRIVATE_KEY_PATH || '/etc/ssl/private.key';
+        const certificatePath = process.env.SSL_CERTIFICATE_PATH || '/etc/ssl//certificate.crt';
+
+        // Читаем приватный ключ и сертификат из файлов
+        const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
+        const certificate = fs.readFileSync(certificatePath, 'utf8');
+
+        // Создаем объект credentials для HTTPS
+        const credentials = { key: privateKey, cert: certificate };
+
+        server = https.createServer(credentials, expressApp);
+    } else {
+        // В разработке используем HTTP
+         server = http.createServer(expressApp);
+    }
 
     // Создаем Apollo Server
     const apolloServer = new ApolloServer({
         schema,
-        cache: 'bounded', // Устанавливаем ограниченный кэш
+        cache: 'bounded',
         context: ({ req }: { req: Request }) => ({
-            dataSource: (req as any).dataSource as DataSource, // Добавляем источник данных в контекст
+            dataSource: (req as any).dataSource as DataSource,
         }),
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), ApolloServerPluginLandingPageGraphQLPlayground()],
+        plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
         introspection: true,
         persistedQueries: false,
     });
@@ -43,5 +65,6 @@ export async function startApolloServer(): Promise<void> {
     });
 
     // Возвращаем промис, разрешенный после запуска сервера
+    await new Promise<void>((resolve) => server.listen({ port: process.env.PORT }, resolve));
+    console.log(`🚀 Server ready at ${isProduction ? 'https' : 'http'}://localhost:${process.env.PORT}${apolloServer.graphqlPath}`);
 }
-

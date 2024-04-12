@@ -67,10 +67,6 @@ export class MovieResolver {
         return await this.movieRepository.save(movie);
     }
 
-
-
-
-
     @Mutation(() => Boolean)
     async deleteMovie(
         @Arg("id") id: number

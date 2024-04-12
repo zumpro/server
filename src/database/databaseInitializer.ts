@@ -8,9 +8,10 @@ export async function initializeDatabase(): Promise<void> {
     try {
         await dataSource.initialize();
         await dataSource.runMigrations()
-        console.log('Подключение к базе данных успешно!');
+        console.log('🌟 База данных успешно подключена! Йоу!');
     } catch (error) {
-        console.error('Ошибка при инициализации базы данных:', error);
-        throw new Error('Failed to initialize database');
+        console.error('💥 Ошибка при инициализации базы данных:', error);
+        throw new Error('Не удалось инициализировать базу данных');
     }
 }
+
