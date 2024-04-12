@@ -3,7 +3,7 @@
 import { Query, Resolver, Arg, Int, Mutation } from "type-graphql";
 import { Movie } from "../entities/Movie";
 import { Genre } from "../entities/Genre";
-import { getAllGenres, getAllMovies, getMovieById, searchMovies } from "./movieService";
+import { SortBy, getAllGenres, getAllMovies, getMovieById, searchMovies } from "./movieService";
 import { Repository } from "typeorm";
 import { dataSource } from "../database/database.config";
 
@@ -27,13 +27,16 @@ export class MovieResolver {
     @Query(() => [Movie])
     async movies(
         @Arg("page", () => Int, { defaultValue: 1 }) page: number,
-        @Arg("limit", () => Int, { defaultValue: 50 }) limit: number,
-        @Arg("sortBy", { defaultValue: "updated_at" }) sortBy: string,
+        @Arg("limit", () => Int, { defaultValue: 20 }) limit: number,
+        @Arg("sortBy", { defaultValue: SortBy.UPDATED_AT }) sortBy: SortBy,
         @Arg("sortOrder", { defaultValue: "DESC" }) sortOrder: "ASC" | "DESC",
         @Arg("searchTerm", () => String, { nullable: true }) searchTerm: string | null,
-        @Arg("genreIds", () => Int, { nullable: true }) genreIds: number | null
+        @Arg("genreIds", () => Int, { nullable: true }) genreIds: number | null,
+        @Arg("year", () => Int, { nullable: true }) year: number | null,
+
+        @Arg("movieKind", () => String, { nullable: true }) movieKind: string | null // Добавляем аргумент для фильтрации по movie_kind
     ): Promise<Movie[]> {
-        return getAllMovies(page, limit, sortBy, sortOrder, searchTerm, genreIds, this.movieRepository);
+        return getAllMovies(page, limit, sortBy, sortOrder, searchTerm, genreIds, this.movieRepository, movieKind,year);
     }
 
     // Получить фильм по идентификатору
