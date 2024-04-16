@@ -18,9 +18,6 @@ export async function startApolloServer(): Promise<void> {
         validate: true,
     });
 
-
-
-
     let server = http.createServer(expressApp);
     
 

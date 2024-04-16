@@ -12,15 +12,21 @@ import { dataSource } from "../database/database.config";
 @Resolver()
 export class MovieResolver {
     private readonly movieRepository: Repository<Movie>;
+    private readonly genreRepository: Repository<Genre>;
+
 
     constructor() {
         this.movieRepository = dataSource.getRepository(Movie);
+        this.genreRepository = dataSource.getRepository(Genre);
+
     }
 
     // Получить все жанры
     @Query(() => [Genre])
-    async allGenres(): Promise<Genre[]> {
-        return getAllGenres();
+    async allGenres(
+
+    ): Promise<Genre[]> {
+        return getAllGenres(this.genreRepository);
     }
 
     // Получить фильмы

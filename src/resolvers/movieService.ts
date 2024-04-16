@@ -1,6 +1,6 @@
 import { Genre } from "../entities/Genre";
 import { Movie } from "../entities/Movie";
-import { Repository, getRepository, FindManyOptions, FindOneOptions, ILike } from "typeorm";
+import { Repository, FindManyOptions, FindOneOptions, ILike } from "typeorm";
 
 
 // Определение перечисления для допустимых значений сортировки
@@ -73,9 +73,11 @@ export async function getAllMovies(
 }
 
 // Получить все жанры
-export async function getAllGenres(): Promise<Genre[]> {
+export async function getAllGenres(
+    genreRepository: Repository<Genre>,
+): Promise<Genre[]> {
     try {
-        return await getRepository(Genre).find();
+        return await genreRepository.find();
     } catch (error) {
         console.error("Ошибка при получении всех жанров:", error.message);
         throw new Error("Ошибка при получении всех жанров");
